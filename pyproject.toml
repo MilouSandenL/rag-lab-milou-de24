@@ -1,0 +1,17 @@
+[project]
+name = "rag-lab-milou-de24"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.123.5",
+    "google-generativeai>=0.8.5",
+    "ipykernel>=7.1.0",
+    "jupyter>=1.1.1",
+    "lancedb>=0.25.3",
+    "pydantic-ai>=1.26.0",
+    "python-dotenv>=1.2.1",
+    "streamlit>=1.51.0",
+    "uvicorn>=0.38.0",
+]
