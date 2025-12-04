@@ -1,13 +1,21 @@
+import os
+from dotenv import load_dotenv
+
 from pydantic_ai import Agent
+from pydantic_ai.agent import RunContext
 from backend.data_models import RagResponse
 from backend.constants import LANCEDB_DIR
 import lancedb
-# connectar till databasen
+
+load_dotenv()
+
+# Connectar till databasen
 vector_db = lancedb.connect(LANCEDB_DIR)
+
 # Skapar rag-agenten. Gjorde den så detaljerad som möjligt för att säkerställa så korrekt respons som möjligt.
 # Bollade med AI för att skapa en ännu mer LLM-vänlig prompt.
 rag_agent = Agent(
-    model="gemini-1.5-flash",
+    model="gemini-2.5-flash",
     system_prompt="""
 You are an AI teaching assistant for a YouTuber who teaches data engineering, data platforms, machine learning and AI.
 
@@ -43,36 +51,50 @@ OUTPUT FORMAT
 """,
     output_type=RagResponse,
 )
-# hämtar tabellen
+
+# ... (resten av filen, inklusive imports och rag_agent-definitionen) ...
+
+# Hämtar tabellen
 articles_table = vector_db.open_table("articles")
 
 @rag_agent.tool
-def retrieve_top_documents(query: str, k: int = 3) -> str:
+def retrieve_top_documents(
+    context: RunContext,
+    query: str,
+    k: int = 3,
+) -> str:
     """
     Uses vector search to find the closest K matching documents (course materials/transcripts)
     to the user's query.
 
     Args:
+        context (RunContext): PydanticAI run context (required by the library).
         query (str): The user's question or query.
         k (int): The number of top documents to retrieve.
 
     Returns:
-        str: A formatted string containing the content, file name, and file path
+        str: A formatted string containing the content, file name, and doc_id
              of the most relevant document.
     """
+    # Använder .to_list() som du hade, men vi kommer åt fälten med dictionary-syntax
     results = articles_table.search(query).limit(k).to_list()
 
     if not results:
         return "No relevant documents found."
-# tar det första dokumentet
+
+    # Tar det första (mest relevanta) dokumentet
     top_result = results[0]
-# formaterar resultatet till en sträng
+
+    # Formaterar resultatet till en sträng som agenten kan använda som kontext
+    # VIKTIGT: Vi använder bara 'file_name', 'doc_id' och 'content'
+    # eftersom 'file_path' inte finns i din Article-modell.
     formatted_context = f"""
-    --- Retrieved Document ---
-    File Name: {top_result['file_name']}
-    File Path: {top_result['file_path']}
-    Content:
-    {top_result['content']}
-    --- End Retrieved Document ---
-    """
+--- Retrieved Document ---
+File Name: {top_result['file_name']}
+Document ID: {top_result['doc_id']}
+
+Content:
+{top_result['content']}
+--- End Retrieved Document ---
+"""
     return formatted_context

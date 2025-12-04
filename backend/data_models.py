@@ -18,12 +18,12 @@ class Article(LanceModel):
 class PromptModel(BaseModel):
     prompt: str = Field(description="User question about the course content")
 
-
 class RagResponse(BaseModel):
     file_name: str = Field(
         description="File name of the retrieved source file (without extension or with, depending on design)."
     )
     file_path: str = Field(
+        default="N/A", # Lägg till default-värde här
         description="Absolute or logical path to the retrieved source file."
     )
     answer: str = Field(
