@@ -20,5 +20,12 @@ class PromptModel(BaseModel):
 
 
 class RagResponse(BaseModel):
-    file_name: str = Field(description="Source file for the answer")
-    answer: str = Field(description="Answer based on retrieved knowledge")
+    file_name: str = Field(
+        description="File name of the retrieved source file (without extension or with, depending on design)."
+    )
+    file_path: str = Field(
+        description="Absolute or logical path to the retrieved source file."
+    )
+    answer: str = Field(
+        description="Answer based on the retrieved knowledge from the source file."
+    )
