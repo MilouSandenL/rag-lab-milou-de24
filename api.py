@@ -7,6 +7,12 @@ app = FastAPI(
     description="API for a RAG-based assistant that answers questions about the YouTuber's course content.",
     version="0.1.0",
 )
+
+#test
+@app.get("/ping")
+async def ping():
+    return {"message": "pong"}
+
 # endpoint på /rag/query
 @app.post("/rag/query", response_model=RagResponse)
 # hanterar förfrågningar till endpointen
