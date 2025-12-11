@@ -1,8 +1,10 @@
 import azure.functions as func
 import api
 
-app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
+print("Imported api module:", api)
+print("FastAPI app object:", getattr(api, "app", None))
 
+app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
 @app.route(route="{*route}", methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"])
 async def fastapi_proxy(
