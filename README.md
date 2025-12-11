@@ -10,24 +10,24 @@ Syftet är att förbättra inlärningsupplevelsen genom att låta användaren st
 
 Detta projekt demonstrerar en komplett RAG‑kedja, från data till användargränssnitt:
 
-- **Task 0 – Data & LanceDB**
+ **Task 0 – Data & LanceDB**
   - Arbetar med transkriberade videoklipp från olika data‑engineeringrelaterade kurser.
   - Sätter upp en LanceDB‑vektordatabas som kunskapsbas.
   - Lagrar både rå text (`content`) och vektorembeddings i samma tabell (`Article`‑modellen).
 
-- **Task 1 – RAG med PydanticAI**
+**Task 1 – RAG med PydanticAI**
   - Bygger ett Retrieval‑Augmented Generation (RAG)‑flöde med PydanticAI.
   - Hämtar relevanta textavsnitt från LanceDB och låter en LLM formulera svaret.
   - Målet är att efterlikna YouTuberns ton/personlighet i svaren.
 
-- **Task 2 – API & Frontend**
+**Task 2 – API & Frontend**
   - **FastAPI‑backend** som exponerar ett `/rag/query`‑endpoint (samt t.ex. `/ping` för hälsokoll).
   - **Streamlit‑frontend** som låter användaren skriva frågor, se svar och se vilken kursfil svaret bygger på.
 
-- **Vektor‑ och språkmodeller**
+**Vektor‑ och språkmodeller**
   - **LLM:** Google Gemini.
   - **Embeddings:** `models/text-embedding-004` via `gemini-text`‑registret i LanceDB.
-  - **Vektordatabas:** LanceDB med `Article`‑modellen:
+**Vektordatabas:** LanceDB med `Article`‑modellen:
 
     ```python
     class Article(LanceModel):
